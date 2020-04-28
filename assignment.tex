@@ -1,0 +1,145 @@
+%%% Template originaly created by Karol Kozioł (mail@karol-koziol.net) and modified for ShareLaTeX use
+
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+
+\renewcommand\familydefault{\sfdefault}
+\usepackage{tgheros}
+\usepackage[defaultmono]{droidmono}
+
+\usepackage{amsmath,amssymb,amsthm,textcomp}
+\usepackage{enumerate}
+\usepackage{multicol}
+\usepackage{tikz}
+
+\usepackage{geometry}
+\geometry{left=25mm,right=25mm,%
+bindingoffset=0mm, top=20mm,bottom=20mm}
+
+
+\linespread{1.3}
+
+\newcommand{\linia}{\rule{\linewidth}{0.5pt}}
+
+% custom theorems if needed
+\newtheoremstyle{mytheor}
+    {1ex}{1ex}{\normalfont}{0pt}{\scshape}{.}{1ex}
+    {{\thmname{#1 }}{\thmnumber{#2}}{\thmnote{ (#3)}}}
+
+\theoremstyle{mytheor}
+\newtheorem{defi}{Definition}
+
+% my own titles
+\makeatletter
+\renewcommand{\maketitle}{
+\begin{center}
+\vspace{2ex}
+{\huge \textsc{\@title}}
+\vspace{1ex}
+\\
+\linia\\
+\@author \hfill \@date
+\vspace{4ex}
+\end{center}
+}
+\makeatother
+%%%
+
+% custom footers and headers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{}
+\chead{}
+\rhead{}
+\lfoot{QI Outline}
+\cfoot{}
+\rfoot{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+%
+
+% code listing settings
+\usepackage{listings}
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    aboveskip={1.0\baselineskip},
+    belowskip={1.0\baselineskip},
+    columns=fixed,
+    extendedchars=true,
+    breaklines=true,
+    tabsize=4,
+    prebreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookleftarrow}},
+    frame=lines,
+    showtabs=false,
+    showspaces=false,
+    showstringspaces=false,
+    keywordstyle=\color[rgb]{0.627,0.126,0.941},
+    commentstyle=\color[rgb]{0.133,0.545,0.133},
+    stringstyle=\color[rgb]{01,0,0},
+    numbers=left,
+    numberstyle=\small,
+    stepnumber=1,
+    numbersep=10pt,
+    captionpos=t,
+    escapeinside={\%*}{*)}
+}
+
+%%%----------%%%----------%%%----------%%%----------%%%
+
+\begin{document}
+
+\title{QI: Integer Computation: Factoring, Multiplication}
+
+\author{Cade Brown, Gregory Croisdale, Rebecca Ryan}
+
+\date{\today}
+
+\maketitle
+
+
+For our QI project, we want to look at various integer-based and number theory calculations that can be done on quantum computers. Many of these algorithms \& ideas can be extremely important for the cryptographic and computing communities, so we feel that they are useful topics, and have interesting theory that we can study, understand, and explain through our project.
+
+\section*{Implementation of Shor's Algorithm for Factoring Integers}
+
+Shor's algorithm is perhaps one of the most anticipated quantum algorithms, for the risk it poses to encryption (see below in the document), as well as the interesting result that drastically improves the computational complexity of integer factorization, a very interesting problem.
+
+This algorithm will be interesting to implement, because it uses elements such as QFT, as well as partial computation on classical and quantum systems, which combine to solve the problem in polynomial time $O((\log n)^2(\log \log n)(\log \log \log n)$.
+
+While probabilistic algorithms already exist for primality testing on classical computers, finding out which numbers divide another number is still a very hard to solve problem using solely classical computers.
+
+Shor's algorithm: \href{https://qudev.phys.ethz.ch/static/content/QSIT15/Shors\%20Algorithm.pdf}{https://qudev.phys.ethz.ch/static/content/QSIT15/Shors\%20Algorithm.pdf}
+
+
+\section*{Prime Finding}
+
+Prime finding has been popularized by the GIMPS project (using Prime95), which searches for Mersenne Primes (primes of the form $2^p-1$). While most of these are too large for any practical benefit such as encryption, they have their own interesting results from an academic standpoint (for instance, for each and every Mersenne prime, a perfect number can be found via $2^{p-1}(2^p-1)$. In fact, all even perfect numbers are connected in this way to a Mersenne prime.
+
+However, that algorithm uses a specialized primality test called the Lucas Lehmer (LL) test. One of our experiments will be attempting to port LL to a quantum system, and if not we will explain why we couldn't and/or why it would not be efficient
+
+
+\section*{Breaking RSA}
+
+RSA is an encryption algorithm based on modular exponentiation and finite fields (i.e. $\mathbb{Z}/p\mathbb{Z}$). The reason it is `secure' is that the problem of factoring integers is extremely hard, and time consuming. If a quantum algorithm (such as Shor's) is realized, many of our current encryption standards would be obsolete and thus valuable data would be compromised.
+
+\section*{$O(n\log(n))$ Integer Multiplication}
+Integer multiplication is one of the most frequently used operations in computing. There is no obvious improvement on a quantum computer, but recent papers in classical computing have shown an incredible lower bound of $O(N \log{N})$ (see \href{https://www.texmacs.org/joris/nlogn/nlogn.pdf}{https://www.texmacs.org/joris/nlogn/nlogn.pdf}) when integers are represented by the sum of the powers of primes. This is an improvement on the traditional $O(n^2)$. We aim to utilize the aforementioned integer factoring method with the fast integer multiplication algorithm to achieve $O(n\log(n))$.
+
+\section*{Presentation}
+We will visually demonstrate the fastest classical computing methods to the aforementioned problems in both a Jupyter notebook and an HTML5 website for easy accessibility. We will animate the algorithms using Google Charts and a small input.
+
+All algorithms will be fully explained with interesting applications and potential set-backs. The Jupyter notebook versions will be fully interactive for any input the reader wants to insert. The work will be organized on the GitHub repository \href{https://github.com/gcrois/QFastInteger}{github.com/gcrois/QFastInteger}.
+
+\end{document}
