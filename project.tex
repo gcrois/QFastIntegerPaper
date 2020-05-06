@@ -185,7 +185,7 @@ The discrete fourier transform (DFT) takes a 2-Dimensional image, and calculates
 
 \subsection{Shor's Algorithm}
 \cite{C5}\cite{Prime}\cite{QCQI}\cite{DFa}
-Shor’s Algorithm takes an input number N, and finds the prime factors (p, q) of N.  This implements polynomial time QFT to factor these integers.  Should a quantum computer be able to handle the stress, it would hypothetically be able to break RSA encryptions that are currently in place.  N must be odd, because N/2 should not be able to be broken down into powers of 2 or else there would be too many computational wrap-arounds without substantial remainders.  If N were to be even, the encryption would be much easier to break due to similarity in prime factors.  
+Shor’s Algorithm takes an input number N, and finds the prime factors (p, q) of N.  This implements polynomial time QFT to factor these integers.  Should a quantum computer be able to handle the stress, it would hypothetically be able to break RSA encryptions that are currently in place.  In general, N is odd, as N/2 should not be able to be broken down into powers of 2 or else there would be too many computational wrap-arounds without substantial remainders.  If N were to be even, the encryption would be much easier to break due to similarity in prime factors.  
 
 \subsection{Lucas-Lehmer Prime Check}\label{sec:lehmer}
 \cite{Prime}
@@ -266,15 +266,21 @@ The code uses wheel factorization (i.e. only checking residue classes modulo $2\
 
 This is not the best that can be done classically, but algorithms such as the GNFS are out of reach for this paper. Instead, we will focus on Quantum algorithms for breaking encryption (specifically, Shor's)
 
-\subsection{Shor's Algorithm}
+\subsection{Shor's Algorithm}\label{sec:shor}
 
-Shor's algorithm is perhaps one of the most anticipated quantum algorithms, for the risk it poses to encryption (see abovein the document), as well as the interesting result that drastically improves the computational complexity of integer factorization, a very interesting problem.
+Shor's algorithm is perhaps one of the most anticipated quantum algorithms, for the risk it poses to encryption (see above in the document), as well as the interesting result that drastically improves the computational complexity of integer factorization, a very interesting problem.
 
 This algorithm will be interesting to implement, because it uses elements such as QFT, as well as partial computation on classical and quantum systems, which combine to solve the problem in polynomial time $O((\log n)^2(\log \log n)(\log \log \log n)$.
 
 While probabilistic algorithms already exist for primality testing on classical computers, finding out which numbers divide another number is still a very hard to solve problem using solely classical computers.
 
 Shor's algorithm: \href{https://qudev.phys.ethz.ch/static/content/QSIT15/Shors\%20Algorithm.pdf}{https://qudev.phys.ethz.ch/static/content/QSIT15/Shors\%20Algorithm.pdf}
+
+Our implementation, while working, has a few evident flaws. Firstly, our implementation does not use an efficient GCD or Inverse Modulo algorithm. This significantly hurts the runtime of the implementation. Additionally, as the quantum circuit is only being simulated, we do not see runtimes consistent with the proposed Big-O. When using the numpy version of fft, we see better times for this reason.
+
+Shor's algorithm relies on a version of the FFT that works well on quantum circuits, as opposed to the problem of general convolution. Other algorithms that are able to utilize this less-than-ideal fact see theoretically tremendous speed-ups when viewed from a quantum standpoint.
+
+It is also important to note that Shor's is not even the fastest quantum factoring algorithm, it was just the first substantial speed up. The \href{https://eprint.iacr.org/2017/351.pdf}{GEECM algorithm} allegedly is "much faster than Shor's". Regardless, this algorithm will always be historically significant as it captured the attention of all who were cryptographically aware - if RSA could be broken in polynomial time, could classical computers even safely send private information? For the time being, it seems that RSA keys greater than 10 bits are safe from our implementation.
 
 
 
@@ -316,7 +322,9 @@ We also tried to implement it as a Quantum circuit. However, we soon researched 
 
 
 \section{Conclusion}
-We will visually demonstrate the fastest classical computing methods to the aforementioned problems in both a Jupyter notebook and an HTML5 website for easy accessibility. We will animate the algorithms using Google Charts and a small input.
+When we first set out on this project, we intended to implement all of the aforementioned algorithms with quantum circuits. The lack of general convolution, however, made this prove to be impossible. Regardless, a lot of insight was gained. For the time being, it seems that the centuries of classical thinking have overwhelmed the few novel quantum circuits. With algorithms such as GEECM beginning to pop up and physical breakthroughs leading to greater feasibility of quantum computing, we think that quantum supremacy will soon, less controversially, be found.
+
+The vast classical toolkit will soon have to compete with real implementations of algorithms which are orders of magnitude faster. One of the greatest advantages that classical computing has is the presence of average-case speedups and case switching - i.e., conditional shortcuts. These are easy to find and understand - for example, ignoring precision not required for the final answer in intermediate steps. These speedups may be possible in the realm of quantum computing, but they are much more difficult to find with our current understanding. Additionally, classical computing has a vast array of literature regarding computability. If you are approached with a problem, you can relatively easily determine if it is possible to find an answer and even how long it will take. This is not so easy with quantum - some operations which we take for granted are covertly difficult or even impossible with a quantum circuit (for example in our case, general convolution using a FT).
 
 \begin{thebibliography}{9}
 \bibitem{qconv} 
