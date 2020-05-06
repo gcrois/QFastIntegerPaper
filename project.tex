@@ -173,7 +173,20 @@ The Fourier Transform (FT) is a mathematical relationship that allows for functi
 
 \subsubsection{Convolution}
 \cite{Asym}\cite{Qconvq}\cite{FFTA}
-Convolution is where two functions acting upon each other produce a new function, based on which function is acting on the other.  This is how the discrete fourier transform (DFT) works, as a pointwise product of their signals.  The quantum fourier transform (QFT) does not work in this way due to entanglement, and that this is not a reversible process.
+Convolution is where two functions acting upon each other produce a new function, based on a localized integral (or discrete summation in the case of discrete sequences). Essentially, you take two functions/sequences ($f$ and $g$), and their convolution (denoted $f * g$) is defined as the sum of values at different offsets, and the complete convolution is the set of all such points. So, for example, $f * g = [1, 0, 0, 2] * [4, 5] $, we can choose either $f$ or $g$ to make copies of, and then calculate the pointwise dotproduct of them shifted:
+
+$[1, 0, 0, 2] * 4$
+
+$[0, 1, 0, 0, 2] * 5$
+
+Summing the entries (and filling in empty ones as $0$) yields:
+
+$[4, 5, 0, 8, 10]$
+
+This is an extremely important operation, in all sorts of fields from audio and video processing, to integer multiplication, and more.
+
+As part of our research, we found that it is physically impossible to construct a quantum circuit to convolve 2 sequences \cite{qconv}, so we could obviously not implement such a functionality for our paper. The problem comes from the fact that multiplication of qubits (i.e. their spin) cannot be done with a unitary matrix, and therefore cannot be reversible.
+
 
 \subsubsection{Trigonometric Parsing}
 \cite{SF}
@@ -270,7 +283,16 @@ This is not the best that can be done classically, but algorithms such as the GN
 
 Shor's algorithm is perhaps one of the most anticipated quantum algorithms, for the risk it poses to encryption (see above in the document), as well as the interesting result that drastically improves the computational complexity of integer factorization, a very interesting problem.
 
-This algorithm will be interesting to implement, because it uses elements such as QFT, as well as partial computation on classical and quantum systems, which combine to solve the problem in polynomial time $O((\log n)^2(\log \log n)(\log \log \log n)$.
+This algorithm will be interesting to implement, because it uses elements such as QFT, as well as partial computation on classical and quantum systems, which combine to solve the problem in polynomial time: $O(N^2 \log N \log \log N)$ (where $N$ is the size of the input).
+
+An overview of Shor's algorithm is (to factor an integer $N$):
+
+1. Pick a random number $1 < a < N$
+
+2. If $\gcd(a, N) \neq 1$, then we have found a factor of $N$, so return that as a factor
+
+3. Now, load a program on a quantum computer to 
+
 
 While probabilistic algorithms already exist for primality testing on classical computers, finding out which numbers divide another number is still a very hard to solve problem using solely classical computers.
 
@@ -318,7 +340,8 @@ We implemented this in Python (so, there were inefficiencies), but we did get an
 
 \includegraphics{intMM_time}
 
-We also tried to implement it as a Quantum circuit. However, we soon researched and found out that this is impossible for the general case \cite{qconv} because of the pointwise multiplication of the FFT results. The reason for this is that a quantum gate that could perform multiplication of the state of 2 qubits would be non-unitary and thus irreversable, and therefore would not work. So, this method of integer multiplication is impossible to implement on a quantum computer.
+We also tried to implement it as a Quantum circuit. However, we soon researched and found out that this is impossible for the general case \cite{qconv} because of the pointwise multiplication of the FFT results. The reason for this is that a quantum gate that could perform multiplication of the state of 2 qubits would be non-unitary and thus irreversible, and therefore would not work. So, this method of integer multiplication is impossible to implement on a quantum computer.
+
 
 
 \section{Conclusion}
